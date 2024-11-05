@@ -24,6 +24,17 @@
     .results {
       margin-top: 20px;
     }
+    .no-Results {
+      display: none;
+      width: 75%;
+      margin: 10px auto;
+      top: 60px;
+      background-color: #f8d7da;
+      color: #721c24;
+      font-size: 16px;
+      padding: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -31,13 +42,16 @@
     <h1>Search for Students</h1>
     <input type="text" id="searchInput" placeholder="Search by name or category...">
     <button onclick="searchItems()">Search</button>
+    <!--"Studnet Not Found" Notifier-->
+    <div class="no-Results" id="noResults">Student Not Found</div>
     <div class="results" id="results"></div>
   </div>
 
   <script>
     function searchItems() {
       const query = document.getElementById('searchInput').value.toLowerCase();
-
+      const noResultsDiv = document.getElementById('noResults');
+      noResultsDiv.style.display = "none"
       // Fetch the data from the db.json
       fetch('http://localhost:3000/students')
         .then(response => response.json())
@@ -50,6 +64,9 @@
           );
 
           displayResults(results);
+          if (results.length === 0){
+            noResultsDiv.style.display = "block";
+          }
         })
         .catch(error => console.error('Error:', error));
     }
@@ -65,6 +82,8 @@
           resultsContainer.appendChild(resultStudents);
         });
       } else {
+        const noResultsDiv = document.getElementById('noResults');
+        noResultsDiv.style.display = "none"
         resultsContainer.textContent = 'No results found';
       }
     }
